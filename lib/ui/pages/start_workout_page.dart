@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class StartWorkoutPage extends StatelessWidget {
+  const StartWorkoutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Extumany'),
+        title: const Text('Start workout'),
       ),
       body: ListView(
         scrollDirection: Axis.vertical,
         children: [
-          BoxItem(),
-          BoxItem(),
-          BoxItem(),
+          WorkoutBoxItem(),
+          WorkoutBoxItem(),
+          WorkoutBoxItem(),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -23,24 +23,10 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: const Icon(Icons.play_circle_filled_rounded, size: 28,),
-              tooltip: 'Start workout',
+              icon: const Icon(Icons.stop_circle, size: 28,),
+              tooltip: 'Stop workout',
               onPressed: () {
-                Navigator.pushNamed(context, '/play');
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.directions_run_rounded, size: 28,),
-              tooltip: 'View exercises',
-              onPressed: () {
-                Navigator.pushNamed(context, '/exercises');
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.auto_graph_rounded, size: 28,),
-              tooltip: 'View analytics',
-              onPressed: () {
-                Navigator.pushNamed(context, '/analytics');
+                // Handle home button press
               },
             ),
           ],
@@ -50,8 +36,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class BoxItem extends StatelessWidget {
-  const BoxItem({super.key});
+class WorkoutBoxItem extends StatelessWidget {
+  const WorkoutBoxItem({super.key});
 
   @override
   Widget build(BuildContext context) {

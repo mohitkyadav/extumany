@@ -17,6 +17,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/play': (context) => StartWorkoutPage(),
+        '/exercises': (context) => ExercisesPage(),
+        '/analytics': (context) => AnalyticsPage(),
+      },
     );
   }
 }
