@@ -2,6 +2,9 @@
 
 An application which let's you log and export your exercise data.
 
+## UI 
+Make it like duolingo, similar game like buttons, streaks (also include rest days, max 2 in a row.)
+
 ## Features
 ### A user can
 1. See a set of preloaded exercises.
