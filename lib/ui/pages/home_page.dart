@@ -23,13 +23,22 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: const Icon(Icons.home),
+              icon: const Icon(Icons.play_circle_filled_rounded, size: 28,),
+              tooltip: 'Start workout',
               onPressed: () {
                 // Handle home button press
               },
             ),
             IconButton(
-              icon: const Icon(Icons.search),
+              icon: const Icon(Icons.directions_run_rounded, size: 28,),
+              tooltip: 'View exercises',
+              onPressed: () {
+                // Handle search button press
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.auto_graph_rounded, size: 28,),
+              tooltip: 'View analytics',
               onPressed: () {
                 // Handle search button press
               },
