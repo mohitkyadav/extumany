@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:extumany/db/models/exercise.dart';
 
-class ExercisesPage extends StatelessWidget {
+
+class ExercisesPage extends StatefulWidget {
   const ExercisesPage({super.key});
+
+  @override
+  State<ExercisesPage> createState() => _ExercisesPageState();
+}
+
+class _ExercisesPageState extends State<ExercisesPage> {
+  final _formKey = GlobalKey<FormState>();
+  String _title = '';
+  String _description = '';
+  String _link = '';
 
   @override
   Widget build(BuildContext context) {
@@ -18,28 +30,100 @@ class ExercisesPage extends StatelessWidget {
           ExerciseBoxItem(),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.stop_circle, size: 28,),
-              tooltip: 'Stop workout',
-              onPressed: () {
-                // Handle home button press
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.directions_run_rounded, size: 28,),
-              tooltip: 'Back',
-              onPressed: () {
-                // Handle search button press
-              },
-            ),
-          ],
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddExerciseForm(context);
+        },
+        tooltip: 'Add new exercise',
+        child: const Icon(Icons.add),
       ),
+      resizeToAvoidBottomInset: true,
     );
+  }
+
+  void _showAddExerciseForm(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Add New Exercise',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) => _title = value!,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                    ),
+                    onSaved: (value) => _description = value!,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Link',
+                    ),
+                    onSaved: (value) => _link = value!,
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () => _saveExercise(context),
+                    child: const Text('Save'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _saveExercise(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // Do something with _name
+    }
+    final exercise = Exercise(
+        title: _title,
+        description: _description,
+        link: _link);
+
+    exercise.persistInDb().then((newExerciseId) {
+      print(newExerciseId);
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Exercise saved successfully!'),
+          duration: Duration(seconds: 2), // Adjust the duration as needed
+        ),
+      );
+    });
   }
 }
 
@@ -49,7 +133,6 @@ class ExerciseBoxItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 150,
       height: 300,
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(

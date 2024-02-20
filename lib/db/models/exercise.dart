@@ -1,4 +1,5 @@
 import 'package:extumany/db/sql_helper.dart';
+import 'package:extumany/utils/utils.dart';
 
 class Exercise {
   static const tableName = 'exercises';
@@ -39,9 +40,9 @@ class Exercise {
 
   Future<int?> persistInDb() async {
     final values = {
-      'title': title,
+      'title': title?.capitalize(),
       'description': description,
-      'link': link,
+      'link': link?.toLowerCase(),
     };
 
     if (id != null) {

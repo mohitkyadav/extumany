@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLHelper {
-  static Future<void> _createTable(sql.Database database) async {
+  static Future<void> _createTables(sql.Database database) async {
     await database.execute("""CREATE TABLE exercises(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       title TEXT,
@@ -14,7 +17,7 @@ class SQLHelper {
   }
 
   static Future<void> _onCreate(sql.Database database, int version) async {
-    await _createTable(database);
+    await _createTables(database);
   }
 
   static Future<void> _onConfigure(sql.Database database) async {
@@ -22,8 +25,10 @@ class SQLHelper {
   }
 
   static Future<sql.Database> db() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+
     return sql.openDatabase(
-      'extDb.db',
+      '${directory.path}/extumany.db',
       version: 1,
       onCreate: _onCreate,
       onConfigure: _onConfigure,
