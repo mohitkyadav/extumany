@@ -1,3 +1,4 @@
+import 'package:extumany/ui/pages/exercise_page/exercise_list.dart';
 import 'package:flutter/material.dart';
 import 'package:extumany/db/models/exercise.dart';
 
@@ -37,11 +38,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Your exercises'),
       ),
-      body: exercises.isEmpty ? const Center(child: Text('No exercises found'))
-          : ListView.builder(
-        itemCount: exercises.length,
-        itemBuilder: (context, index) => ExerciseBoxItem(exercise: exercises[index]),
-      ),
+      body: ExerciseList(exercises: exercises, deleteExercise: _deleteExercise),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddExerciseForm(context);
@@ -137,28 +134,17 @@ class _ExercisesPageState extends State<ExercisesPage> {
       );
     });
   }
-}
 
-class ExerciseBoxItem extends StatelessWidget {
-  const ExerciseBoxItem({super.key, required this.exercise});
-
-  final Exercise exercise;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Text(
-          exercise.title,
-          style: const TextStyle(fontSize: 20),
+  void _deleteExercise(int id) {
+    Exercise.delete(id).then((_) {
+      _loadExercises();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Exercise deleted successfully!'),
+          duration: Duration(seconds: 2),
         ),
-      ),
-    );
+      );
+    });
   }
 }
+

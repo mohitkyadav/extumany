@@ -55,6 +55,10 @@ class Exercise {
     );
   }
 
+  static Future<void> delete(int id) async {
+    await SQLHelper.delete(tableName, id);
+  }
+
   static Future<Exercise> getOne(int id) async {
     final List<Map<String, Object?>> result = await SQLHelper
         .get(tableName, id);
