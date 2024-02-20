@@ -6,12 +6,38 @@ import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLHelper {
   static Future<void> _createTables(sql.Database database) async {
-    await database.execute("""CREATE TABLE exercises(
+    await database.execute("""
+    CREATE TABLE exercises(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       title TEXT,
       description TEXT,
       link TEXT,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+    CREATE TABLE workouts(
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      title TEXT,
+      description TEXT,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+    CREATE TABLE workout_exercises(
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      workout_id INTEGER,
+      exercise_id INTEGER,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (workout_id) REFERENCES workouts(id),
+      FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+    )
+    CREATE TABLE workout_exercise_sets(
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      workout_id INTEGER,
+      exercise_id INTEGER,
+      set_number INTEGER,
+      reps INTEGER,
+      weight REAL,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (workout_id) REFERENCES workouts(id),
+      FOREIGN KEY (exercise_id) REFERENCES exercises(id)
     )
     """);
   }
@@ -47,10 +73,10 @@ class SQLHelper {
 
   // Read
   static Future<List<Map<String, Object?>>> queryAll(
-      String table, {String orderBy = 'id'}) async {
+      String table, {String orderBy = 'id', String where = '', List<Object?>? whereArgs}) async {
     final db = await SQLHelper.db();
 
-    return db.query(table, orderBy: orderBy);
+    return db.query(table, orderBy: orderBy, where: where, whereArgs: whereArgs);
   }
 
   static Future<List<Map<String, Object?>>> get(String table, int id) async {

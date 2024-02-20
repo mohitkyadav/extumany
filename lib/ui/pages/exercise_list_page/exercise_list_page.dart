@@ -1,16 +1,16 @@
-import 'package:extumany/ui/pages/exercise_page/exercise_list.dart';
+import 'package:extumany/ui/pages/exercise_list_page/exercise_list.dart';
 import 'package:flutter/material.dart';
 import 'package:extumany/db/models/exercise.dart';
 
 
-class ExercisesPage extends StatefulWidget {
-  const ExercisesPage({super.key});
+class ExerciseListPage extends StatefulWidget {
+  const ExerciseListPage({super.key});
 
   @override
-  State<ExercisesPage> createState() => _ExercisesPageState();
+  State<ExerciseListPage> createState() => _ExerciseListPageState();
 }
 
-class _ExercisesPageState extends State<ExercisesPage> {
+class _ExerciseListPageState extends State<ExerciseListPage> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   String _description = '';
