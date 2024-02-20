@@ -54,7 +54,7 @@ class ExerciseBoxItem extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: Card(
         shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.grey, width: 0.5),
+          side: const BorderSide(width: 0.5),
           borderRadius: BorderRadius.circular(8.0),
         ),
         elevation: 0,
@@ -67,7 +67,7 @@ class ExerciseBoxItem extends StatelessWidget {
               ),
               subtitle: Text(
                 exercise.description ?? '',
-                style: const TextStyle(fontSize: 14,),
+                style: const TextStyle(fontSize: 12,),
               ),
             ),
             ButtonBar(
