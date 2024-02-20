@@ -14,6 +14,21 @@ class _ExercisesPageState extends State<ExercisesPage> {
   String _title = '';
   String _description = '';
   String _link = '';
+  List<Exercise> exercises = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadExercises();
+  }
+
+  Future<void> _loadExercises() async {
+    List<Exercise> loadedExercises = await Exercise.getAll();
+    setState(() {
+      exercises = loadedExercises;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +37,10 @@ class _ExercisesPageState extends State<ExercisesPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Your exercises'),
       ),
-      body: ListView(
-        scrollDirection: Axis.vertical,
-        children: const [
-          ExerciseBoxItem(),
-          ExerciseBoxItem(),
-          ExerciseBoxItem(),
-        ],
+      body: exercises.isEmpty ? const Center(child: Text('No exercises found'))
+          : ListView.builder(
+        itemCount: exercises.length,
+        itemBuilder: (context, index) => ExerciseBoxItem(exercise: exercises[index]),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -115,12 +127,12 @@ class _ExercisesPageState extends State<ExercisesPage> {
         link: _link);
 
     exercise.persistInDb().then((newExerciseId) {
-      print(newExerciseId);
+      _loadExercises();
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Exercise saved successfully!'),
-          duration: Duration(seconds: 2), // Adjust the duration as needed
+          duration: Duration(seconds: 2),
         ),
       );
     });
@@ -128,7 +140,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
 }
 
 class ExerciseBoxItem extends StatelessWidget {
-  const ExerciseBoxItem({super.key});
+  const ExerciseBoxItem({super.key, required this.exercise});
+
+  final Exercise exercise;
 
   @override
   Widget build(BuildContext context) {
@@ -139,10 +153,10 @@ class ExerciseBoxItem extends StatelessWidget {
         color: Colors.grey[300],
         borderRadius: BorderRadius.circular(10),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
-          'Box Item',
-          style: TextStyle(fontSize: 20),
+          exercise.title,
+          style: const TextStyle(fontSize: 20),
         ),
       ),
     );

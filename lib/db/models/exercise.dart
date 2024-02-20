@@ -5,16 +5,17 @@ class Exercise {
   static const tableName = 'exercises';
 
   Exercise({
+    required this.title,
     this.id,
     this.createdAt,
-    this.title,
+
     this.description,
     this.link,
   });
 
   int? id;
   DateTime? createdAt;
-  String? title;
+  String title;
   String? description;
   String? link;
 
@@ -28,19 +29,9 @@ class Exercise {
     };
   }
 
-  Exercise fromMap(Map<String, dynamic> map) {
-    return Exercise(
-      id: map['id'],
-      createdAt: DateTime.parse(map['created_at']),
-      title: map['title'],
-      description: map['description'],
-      link: map['link'],
-    );
-  }
-
   Future<int?> persistInDb() async {
     final values = {
-      'title': title?.capitalize(),
+      'title': title.capitalize(),
       'description': description,
       'link': link?.toLowerCase(),
     };
@@ -54,18 +45,29 @@ class Exercise {
     return id;
   }
 
-  Future<List<Exercise>> getAll() async {
-    final List<Map<String, Object?>> result = await SQLHelper
-        .queryAll(tableName);
-    return List.generate(result.length, (i) {
-      return fromMap(result[i]);
-    });
+  static Exercise fromMap(Map<String, dynamic> map) {
+    return Exercise(
+      id: map['id'],
+      createdAt: DateTime.parse(map['created_at']),
+      title: map['title'],
+      description: map['description'],
+      link: map['link'],
+    );
   }
 
-  Future<Exercise> get(int id) async {
+  static Future<Exercise> getOne(int id) async {
     final List<Map<String, Object?>> result = await SQLHelper
         .get(tableName, id);
 
     return fromMap(result[0]);
   }
+
+  static Future<List<Exercise>> getAll() async {
+    final List<Map<String, Object?>> result = await SQLHelper
+        .queryAll(tableName);
+    return List.generate(result.length, (i) {
+      return Exercise.fromMap(result[i]);
+    });
+  }
+
 }
