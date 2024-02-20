@@ -1,7 +1,12 @@
-import 'package:extumany/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'package:extumany/ui/pages/pages.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+Future main() async {
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
+
   runApp(const MyApp());
 }
 
