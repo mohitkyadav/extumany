@@ -12,7 +12,7 @@ class StartWorkoutPage extends StatelessWidget {
       ),
       body: ListView(
         scrollDirection: Axis.vertical,
-        children: [
+        children: const [
           WorkoutBoxItem(),
           WorkoutBoxItem(),
           WorkoutBoxItem(),

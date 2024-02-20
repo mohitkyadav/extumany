@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
       ),
       body: ListView(
         scrollDirection: Axis.vertical,
-        children: [
+        children: const [
           BoxItem(),
           BoxItem(),
           BoxItem(),

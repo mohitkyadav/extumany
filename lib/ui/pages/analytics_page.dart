@@ -12,7 +12,7 @@ class AnalyticsPage extends StatelessWidget {
       ),
       body: ListView(
         scrollDirection: Axis.vertical,
-        children: [
+        children: const [
           AnalyticsBoxItem(),
           AnalyticsBoxItem(),
           AnalyticsBoxItem(),
