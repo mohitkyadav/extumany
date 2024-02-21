@@ -83,49 +83,51 @@ class WorkoutBoxItem extends StatelessWidget {
           side: const BorderSide(width: 0.5),
           borderRadius: BorderRadius.circular(8.0),
         ),
+        clipBehavior: Clip.antiAlias,
         elevation: 0,
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(
+        child: InkWell(
+          onTap: () => Navigator.pushNamed(
+            context,
+            WorkoutDetailsPage.routeName,
+            arguments: workout.id,
+          ),
+          child: Column(
+            children: [
+              Text(
                 workout.title,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              onTap: () => Navigator.pushNamed(
-                  context, WorkoutDetailsPage.routeName,
-                  arguments: workout.id),
-              subtitle: Text(
+              Text(
                 workout.description ?? '',
                 style: const TextStyle(
                   fontSize: 12,
                 ),
               ),
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.edit_rounded,
-                    size: 16,
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.edit_rounded,
+                      size: 16,
+                    ),
+                    onPressed: () => showEditWorkoutForm(context, workout),
+                    tooltip: 'Edit ${workout.title}',
                   ),
-                  onPressed: () => showEditWorkoutForm(context, workout),
-                  tooltip: 'Edit ${workout.title}',
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.delete_forever_rounded,
-                    size: 16,
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_forever_rounded,
+                      size: 16,
+                    ),
+                    onPressed: () => deleteWorkout(workout.id!),
+                    tooltip: 'Delete ${workout.title}',
                   ),
-                  onPressed: () => deleteWorkout(workout.id!),
-                  tooltip: 'Delete ${workout.title}',
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -25,8 +25,8 @@ class SQLHelper {
       workout_id INTEGER,
       exercise_id INTEGER,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (workout_id) REFERENCES workouts(id),
-      FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+      FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE,
+      FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
     );
     CREATE TABLE workout_exercise_sets(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -36,8 +36,8 @@ class SQLHelper {
       reps INTEGER,
       weight REAL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (workout_id) REFERENCES workouts(id),
-      FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+      FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE,
+      FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
     );
     """);
   }
