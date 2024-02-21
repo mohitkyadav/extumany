@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 
 class WorkoutList extends StatelessWidget {
   const WorkoutList(
-      {super.key, required this.workouts, required this.deleteWorkout});
+      {super.key, required this.workouts, required this.deleteWorkout, required this.showEditWorkoutForm});
 
   final List<Workout> workouts;
   final void Function(int) deleteWorkout;
+  final void Function(BuildContext, Workout) showEditWorkoutForm;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class WorkoutList extends StatelessWidget {
         itemBuilder: (context, index) => WorkoutBoxItem(
               workout: workouts[index],
               deleteWorkout: deleteWorkout,
+          showEditWorkoutForm: showEditWorkoutForm,
             ));
   }
 }
@@ -59,10 +61,11 @@ class EmptyState extends StatelessWidget {
 
 class WorkoutBoxItem extends StatelessWidget {
   const WorkoutBoxItem(
-      {super.key, required this.workout, required this.deleteWorkout});
+      {super.key, required this.workout, required this.deleteWorkout, required this.showEditWorkoutForm});
 
   final Workout workout;
   final void Function(int) deleteWorkout;
+  final void Function(BuildContext, Workout) showEditWorkoutForm;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +102,7 @@ class WorkoutBoxItem extends StatelessWidget {
                     Icons.edit_rounded,
                     size: 16,
                   ),
-                  onPressed: () {},
+                  onPressed: () => showEditWorkoutForm(context, workout),
                   tooltip: 'Edit ${workout.title}',
                 ),
                 IconButton(
