@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:extumany/db/models/exercise.dart';
 
 class ExerciseList extends StatelessWidget {
-  const ExerciseList({super.key,
-    required this.exercises, required this.deleteExercise});
+  const ExerciseList(
+      {super.key,
+      required this.exercises,
+      required this.deleteExercise,
+      required this.showEditExerciseForm});
 
   final List<Exercise> exercises;
   final void Function(int) deleteExercise;
+  final void Function(BuildContext, Exercise) showEditExerciseForm;
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +20,10 @@ class ExerciseList extends StatelessWidget {
 
     return ListView.builder(
         itemCount: exercises.length,
-        itemBuilder: (
-            context, index) => ExerciseBoxItem(exercise: exercises[index], deleteExercise: deleteExercise,));
+        itemBuilder: (context, index) => ExerciseBoxItem(
+            exercise: exercises[index],
+            deleteExercise: deleteExercise,
+            showEditExerciseForm: showEditExerciseForm));
   }
 }
 
@@ -31,11 +37,24 @@ class EmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(Icons.fitness_center, size: 48),
-          SizedBox(height: 24,),
-          Text('No exercises yet', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
-          SizedBox(height: 16,),
-          Text('Add your first exercise to get started', style: TextStyle(fontSize: 14),),
-          Text('Click on the + button to add an exercise', style: TextStyle(fontSize: 14),),
+          SizedBox(
+            height: 24,
+          ),
+          Text(
+            'No exercises yet',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            'Add your first exercise to get started',
+            style: TextStyle(fontSize: 14),
+          ),
+          Text(
+            'Click on the + button to add an exercise',
+            style: TextStyle(fontSize: 14),
+          ),
         ],
       ),
     );
@@ -43,10 +62,15 @@ class EmptyState extends StatelessWidget {
 }
 
 class ExerciseBoxItem extends StatelessWidget {
-  const ExerciseBoxItem({super.key, required this.exercise, required this.deleteExercise});
+  const ExerciseBoxItem(
+      {super.key,
+      required this.exercise,
+      required this.deleteExercise,
+      required this.showEditExerciseForm});
 
   final Exercise exercise;
   final void Function(int) deleteExercise;
+  final void Function(BuildContext, Exercise) showEditExerciseForm;
 
   @override
   Widget build(BuildContext context) {
@@ -63,31 +87,43 @@ class ExerciseBoxItem extends StatelessWidget {
             ListTile(
               title: Text(
                 exercise.title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               subtitle: Text(
                 exercise.description ?? '',
-                style: const TextStyle(fontSize: 12,),
+                style: const TextStyle(
+                  fontSize: 12,
+                ),
               ),
             ),
             ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.edit_rounded, size: 16,),
-                  onPressed: () {
-                  },
+                  icon: const Icon(
+                    Icons.edit_rounded,
+                    size: 16,
+                  ),
+                  onPressed: () => showEditExerciseForm(context, exercise),
                   tooltip: 'Edit ${exercise.title}',
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_forever_rounded, size: 16,),
+                  icon: const Icon(
+                    Icons.delete_forever_rounded,
+                    size: 16,
+                  ),
                   onPressed: () => deleteExercise(exercise.id!),
                   tooltip: 'Delete ${exercise.title}',
                 ),
                 IconButton(
-                  icon: const Icon(Icons.north_east_sharp, size: 16,),
-                  onPressed: () {
-                  },
+                  icon: const Icon(
+                    Icons.north_east_sharp,
+                    size: 16,
+                  ),
+                  onPressed: () {},
                   tooltip: 'Open link for ${exercise.title}',
                 ),
               ],

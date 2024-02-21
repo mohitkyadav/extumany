@@ -1,22 +1,20 @@
 import 'package:extumany/db/sql_helper.dart';
 import 'package:extumany/utils/utils.dart';
 
-class Exercise {
-  static const tableName = 'exercises';
+class Workout {
+  static const tableName = 'workouts';
 
-  Exercise({
+  Workout({
     required this.title,
     this.id,
     this.createdAt,
     this.description,
-    this.link,
   });
 
   int? id;
   DateTime? createdAt;
   String title;
   String? description;
-  String? link;
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +22,6 @@ class Exercise {
       'created_at': createdAt?.toIso8601String(),
       'title': title,
       'description': description,
-      'link': link,
     };
   }
 
@@ -32,7 +29,6 @@ class Exercise {
     final values = {
       'title': title.capitalize(),
       'description': description,
-      'link': link?.toLowerCase(),
     };
 
     if (id != null) {
@@ -44,13 +40,12 @@ class Exercise {
     return id;
   }
 
-  static Exercise fromMap(Map<String, dynamic> map) {
-    return Exercise(
+  static Workout fromMap(Map<String, dynamic> map) {
+    return Workout(
       id: map['id'],
       createdAt: DateTime.parse(map['created_at']),
       title: map['title'],
       description: map['description'],
-      link: map['link'],
     );
   }
 
@@ -58,18 +53,18 @@ class Exercise {
     await SQLHelper.delete(tableName, id);
   }
 
-  static Future<Exercise> getOne(int id) async {
+  static Future<Workout> getOne(int id) async {
     final List<Map<String, Object?>> result =
         await SQLHelper.get(tableName, id);
 
     return fromMap(result[0]);
   }
 
-  static Future<List<Exercise>> getAll() async {
+  static Future<List<Workout>> getAll() async {
     final List<Map<String, Object?>> result =
         await SQLHelper.queryAll(tableName);
     return List.generate(result.length, (i) {
-      return Exercise.fromMap(result[i]);
+      return Workout.fromMap(result[i]);
     });
   }
 }

@@ -23,7 +23,10 @@ class StartWorkoutPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: const Icon(Icons.stop_circle, size: 28,),
+              icon: const Icon(
+                Icons.stop_circle,
+                size: 28,
+              ),
               tooltip: 'Stop workout',
               onPressed: () {
                 // Handle home button press

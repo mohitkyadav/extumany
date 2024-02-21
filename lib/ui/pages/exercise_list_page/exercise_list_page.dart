@@ -1,25 +1,26 @@
-import 'package:extumany/ui/pages/exercise_page/exercise_list.dart';
+import 'package:extumany/ui/pages/exercise_list_page/exercise_list.dart';
 import 'package:flutter/material.dart';
 import 'package:extumany/db/models/exercise.dart';
 
-
-class ExercisesPage extends StatefulWidget {
-  const ExercisesPage({super.key});
+class ExerciseListPage extends StatefulWidget {
+  const ExerciseListPage({super.key});
 
   @override
-  State<ExercisesPage> createState() => _ExercisesPageState();
+  State<ExerciseListPage> createState() => _ExerciseListPageState();
 }
 
-class _ExercisesPageState extends State<ExercisesPage> {
+class _ExerciseListPageState extends State<ExerciseListPage> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   String _description = '';
   String _link = '';
   List<Exercise> exercises = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     _loadExercises();
   }
 
@@ -27,9 +28,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
     List<Exercise> loadedExercises = await Exercise.getAll();
     setState(() {
       exercises = loadedExercises;
+      _isLoading = false;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +39,14 @@ class _ExercisesPageState extends State<ExercisesPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Your exercises'),
       ),
-      body: ExerciseList(exercises: exercises, deleteExercise: _deleteExercise),
+      body: _isLoading
+          ? const LinearProgressIndicator()
+          : ExerciseList(
+              exercises: exercises,
+              deleteExercise: _deleteExercise,
+              showEditExerciseForm: _showEditExerciseForm),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddExerciseForm(context);
-        },
+        onPressed: () => _showAddExerciseForm(context),
         tooltip: 'Add new exercise',
         child: const Icon(Icons.add),
       ),
@@ -116,12 +120,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
   void _saveExercise(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Do something with _name
     }
-    final exercise = Exercise(
-        title: _title,
-        description: _description,
-        link: _link);
+    final exercise =
+        Exercise(title: _title, description: _description, link: _link);
 
     exercise.persistInDb().then((newExerciseId) {
       _loadExercises();
@@ -132,6 +133,94 @@ class _ExercisesPageState extends State<ExercisesPage> {
           duration: Duration(seconds: 2),
         ),
       );
+      _formKey.currentState!.reset();
+    });
+  }
+
+  void _showEditExerciseForm(BuildContext context, Exercise exercise) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Edit Exercise',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    initialValue: exercise.title,
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) => _title = value!,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: exercise.description,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                    ),
+                    onSaved: (value) => _description = value!,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: exercise.link,
+                    decoration: const InputDecoration(
+                      labelText: 'Link',
+                    ),
+                    onSaved: (value) => _link = value!,
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () => _updateExercise(context, exercise),
+                    child: const Text('Save'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _updateExercise(BuildContext context, Exercise exercise) {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // Do something with _name
+    }
+    final updatedExercise = Exercise(
+        id: exercise.id, title: _title, description: _description, link: _link);
+
+    updatedExercise.persistInDb().then((newExerciseId) {
+      _loadExercises();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Exercise updated successfully!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      _formKey.currentState!.reset();
     });
   }
 
@@ -147,4 +236,3 @@ class _ExercisesPageState extends State<ExercisesPage> {
     });
   }
 }
-
