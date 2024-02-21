@@ -32,7 +32,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
       ),
       body: _isLoading
           ? const LinearProgressIndicator()
-          :WorkoutList(workouts: workouts, deleteWorkout: _deleteWorkout),
+          : WorkoutList(workouts: workouts, deleteWorkout: _deleteWorkout),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateWorkoutForm(context),
         tooltip: 'Create new workout',
@@ -40,7 +40,6 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
       ),
     );
   }
-
 
   void _showCreateWorkoutForm(BuildContext context) {
     showModalBottomSheet(
@@ -103,9 +102,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
       _formKey.currentState!.save();
       // Do something with _name
     }
-    final workout = Workout(
-        title: _title,
-        description: _description);
+    final workout = Workout(title: _title, description: _description);
 
     workout.persistInDb().then((newWorkoutId) {
       _loadWorkouts();

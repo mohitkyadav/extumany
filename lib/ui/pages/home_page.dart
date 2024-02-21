@@ -24,31 +24,51 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: const Icon(Icons.play_circle_filled_rounded, size: 28,),
+              icon: const Icon(
+                Icons.play_circle_filled_rounded,
+                size: 28,
+              ),
               tooltip: 'Start workout',
               onPressed: () => Navigator.pushNamed(context, '/play'),
             ),
             IconButton(
-              icon: const Icon(Icons.list_alt_rounded, size: 28,),
+              icon: const Icon(
+                Icons.list_alt_rounded,
+                size: 28,
+              ),
               tooltip: 'Workouts',
               onPressed: () => Navigator.pushNamed(context, '/workouts'),
             ),
             IconButton(
-              icon: const Icon(Icons.fitness_center_rounded, size: 28,),
+              icon: const Icon(
+                Icons.fitness_center_rounded,
+                size: 28,
+              ),
               tooltip: 'View exercises',
               onPressed: () => Navigator.pushNamed(context, '/exercises'),
             ),
             IconButton(
-              icon: const Icon(Icons.auto_graph_rounded, size: 28,),
+              icon: const Icon(
+                Icons.auto_graph_rounded,
+                size: 28,
+              ),
               tooltip: 'View analytics',
               onPressed: () => Navigator.pushNamed(context, '/analytics'),
             ),
-            IconButton(onPressed: () => SQLHelper.deleteDb(),
-                icon: const Icon(Icons.delete_forever_rounded,
-                  size: 28, color: Colors.red,)),
-            IconButton(onPressed: () => SQLHelper.seedDb(),
-                icon: const Icon(Icons.cloud_download_rounded,
-                  size: 28, color: Colors.green,)),
+            IconButton(
+                onPressed: () => SQLHelper.deleteDb(),
+                icon: const Icon(
+                  Icons.delete_forever_rounded,
+                  size: 28,
+                  color: Colors.red,
+                )),
+            IconButton(
+                onPressed: () => SQLHelper.seedDb(),
+                icon: const Icon(
+                  Icons.cloud_download_rounded,
+                  size: 28,
+                  color: Colors.green,
+                )),
           ],
         ),
       ),

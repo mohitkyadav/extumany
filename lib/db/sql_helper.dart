@@ -72,11 +72,12 @@ class SQLHelper {
   }
 
   // Read
-  static Future<List<Map<String, Object?>>> queryAll(
-      String table, {String orderBy = 'id', String? where, List<Object?>? whereArgs}) async {
+  static Future<List<Map<String, Object?>>> queryAll(String table,
+      {String orderBy = 'id', String? where, List<Object?>? whereArgs}) async {
     final db = await SQLHelper.db();
 
-    return db.query(table, orderBy: orderBy, where: where, whereArgs: whereArgs);
+    return db.query(table,
+        orderBy: orderBy, where: where, whereArgs: whereArgs);
   }
 
   static Future<List<Map<String, Object?>>> get(String table, int id) async {
@@ -86,7 +87,7 @@ class SQLHelper {
   }
 
   // Update
-  static Future<int> update( String table, int id, Map values) async {
+  static Future<int> update(String table, int id, Map values) async {
     final db = await SQLHelper.db();
 
     final result = await db.update(table, values as Map<String, Object?>,

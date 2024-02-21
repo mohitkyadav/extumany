@@ -2,9 +2,8 @@ import 'package:extumany/db/models/models.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutList extends StatelessWidget {
-  const WorkoutList({super.key,
-    required this.workouts, required this.deleteWorkout});
-
+  const WorkoutList(
+      {super.key, required this.workouts, required this.deleteWorkout});
 
   final List<Workout> workouts;
   final void Function(int) deleteWorkout;
@@ -17,12 +16,12 @@ class WorkoutList extends StatelessWidget {
 
     return ListView.builder(
         itemCount: workouts.length,
-        itemBuilder: (
-            context, index) => WorkoutBoxItem(workout: workouts[index],
-          deleteWorkout: deleteWorkout,));
+        itemBuilder: (context, index) => WorkoutBoxItem(
+              workout: workouts[index],
+              deleteWorkout: deleteWorkout,
+            ));
   }
 }
-
 
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key});
@@ -34,11 +33,24 @@ class EmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(Icons.list_alt_rounded, size: 48),
-          SizedBox(height: 24,),
-          Text('No workouts yet', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),),
-          SizedBox(height: 16,),
-          Text('Add your first workout to get started', style: TextStyle(fontSize: 14),),
-          Text('Click on the + button to create a workout plan', style: TextStyle(fontSize: 14),),
+          SizedBox(
+            height: 24,
+          ),
+          Text(
+            'No workouts yet',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            'Add your first workout to get started',
+            style: TextStyle(fontSize: 14),
+          ),
+          Text(
+            'Click on the + button to create a workout plan',
+            style: TextStyle(fontSize: 14),
+          ),
         ],
       ),
     );
@@ -46,7 +58,8 @@ class EmptyState extends StatelessWidget {
 }
 
 class WorkoutBoxItem extends StatelessWidget {
-  const WorkoutBoxItem({super.key, required this.workout, required this.deleteWorkout});
+  const WorkoutBoxItem(
+      {super.key, required this.workout, required this.deleteWorkout});
 
   final Workout workout;
   final void Function(int) deleteWorkout;
@@ -66,24 +79,34 @@ class WorkoutBoxItem extends StatelessWidget {
             ListTile(
               title: Text(
                 workout.title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               subtitle: Text(
                 workout.description ?? '',
-                style: const TextStyle(fontSize: 12,),
+                style: const TextStyle(
+                  fontSize: 12,
+                ),
               ),
             ),
             ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.edit_rounded, size: 16,),
-                  onPressed: () {
-                  },
+                  icon: const Icon(
+                    Icons.edit_rounded,
+                    size: 16,
+                  ),
+                  onPressed: () {},
                   tooltip: 'Edit ${workout.title}',
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_forever_rounded, size: 16,),
+                  icon: const Icon(
+                    Icons.delete_forever_rounded,
+                    size: 16,
+                  ),
                   onPressed: () => deleteWorkout(workout.id!),
                   tooltip: 'Delete ${workout.title}',
                 ),

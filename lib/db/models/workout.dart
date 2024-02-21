@@ -54,15 +54,15 @@ class Workout {
   }
 
   static Future<Workout> getOne(int id) async {
-    final List<Map<String, Object?>> result = await SQLHelper
-        .get(tableName, id);
+    final List<Map<String, Object?>> result =
+        await SQLHelper.get(tableName, id);
 
     return fromMap(result[0]);
   }
 
   static Future<List<Workout>> getAll() async {
-    final List<Map<String, Object?>> result = await SQLHelper
-        .queryAll(tableName);
+    final List<Map<String, Object?>> result =
+        await SQLHelper.queryAll(tableName);
     return List.generate(result.length, (i) {
       return Workout.fromMap(result[i]);
     });

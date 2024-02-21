@@ -8,7 +8,6 @@ class Exercise {
     required this.title,
     this.id,
     this.createdAt,
-
     this.description,
     this.link,
   });
@@ -60,18 +59,17 @@ class Exercise {
   }
 
   static Future<Exercise> getOne(int id) async {
-    final List<Map<String, Object?>> result = await SQLHelper
-        .get(tableName, id);
+    final List<Map<String, Object?>> result =
+        await SQLHelper.get(tableName, id);
 
     return fromMap(result[0]);
   }
 
   static Future<List<Exercise>> getAll() async {
-    final List<Map<String, Object?>> result = await SQLHelper
-        .queryAll(tableName);
+    final List<Map<String, Object?>> result =
+        await SQLHelper.queryAll(tableName);
     return List.generate(result.length, (i) {
       return Exercise.fromMap(result[i]);
     });
   }
-
 }
