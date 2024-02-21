@@ -32,7 +32,10 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
       ),
       body: _isLoading
           ? const LinearProgressIndicator()
-          : WorkoutList(workouts: workouts, deleteWorkout: _deleteWorkout, showEditWorkoutForm: _showEditWorkoutForm),
+          : WorkoutList(
+              workouts: workouts,
+              deleteWorkout: _deleteWorkout,
+              showEditWorkoutForm: _showEditWorkoutForm),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateWorkoutForm(context),
         tooltip: 'Create new workout',

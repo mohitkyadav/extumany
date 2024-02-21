@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 class WorkoutList extends StatelessWidget {
   const WorkoutList(
-      {super.key, required this.workouts, required this.deleteWorkout, required this.showEditWorkoutForm});
+      {super.key,
+      required this.workouts,
+      required this.deleteWorkout,
+      required this.showEditWorkoutForm});
 
   final List<Workout> workouts;
   final void Function(int) deleteWorkout;
@@ -20,7 +23,7 @@ class WorkoutList extends StatelessWidget {
         itemBuilder: (context, index) => WorkoutBoxItem(
               workout: workouts[index],
               deleteWorkout: deleteWorkout,
-          showEditWorkoutForm: showEditWorkoutForm,
+              showEditWorkoutForm: showEditWorkoutForm,
             ));
   }
 }
@@ -61,7 +64,10 @@ class EmptyState extends StatelessWidget {
 
 class WorkoutBoxItem extends StatelessWidget {
   const WorkoutBoxItem(
-      {super.key, required this.workout, required this.deleteWorkout, required this.showEditWorkoutForm});
+      {super.key,
+      required this.workout,
+      required this.deleteWorkout,
+      required this.showEditWorkoutForm});
 
   final Workout workout;
   final void Function(int) deleteWorkout;
