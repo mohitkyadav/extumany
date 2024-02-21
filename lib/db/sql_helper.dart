@@ -13,13 +13,13 @@ class SQLHelper {
       description TEXT,
       link TEXT,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
+    );
     CREATE TABLE workouts(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       title TEXT,
       description TEXT,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
+    );
     CREATE TABLE workout_exercises(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       workout_id INTEGER,
@@ -27,7 +27,7 @@ class SQLHelper {
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (workout_id) REFERENCES workouts(id),
       FOREIGN KEY (exercise_id) REFERENCES exercises(id)
-    )
+    );
     CREATE TABLE workout_exercise_sets(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       workout_id INTEGER,
@@ -38,7 +38,7 @@ class SQLHelper {
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (workout_id) REFERENCES workouts(id),
       FOREIGN KEY (exercise_id) REFERENCES exercises(id)
-    )
+    );
     """);
   }
 
@@ -73,7 +73,7 @@ class SQLHelper {
 
   // Read
   static Future<List<Map<String, Object?>>> queryAll(
-      String table, {String orderBy = 'id', String where = '', List<Object?>? whereArgs}) async {
+      String table, {String orderBy = 'id', String? where, List<Object?>? whereArgs}) async {
     final db = await SQLHelper.db();
 
     return db.query(table, orderBy: orderBy, where: where, whereArgs: whereArgs);
@@ -104,5 +104,89 @@ class SQLHelper {
     } catch (err) {
       debugPrint("Error deleting item id: $id from $table, error: 'err'");
     }
+  }
+
+  static Future<void> deleteDb() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    await sql.deleteDatabase('${directory.path}/extumany.db');
+  }
+
+  static Future<void> seedDb() async {
+    final db = await SQLHelper.db();
+
+    await db.transaction((txn) async {
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Bench press', 'Lay on a bench and press the bar', 'https://www.youtube.com/watch?v=0quc7LX7Jk8');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Squat', 'Stand with a barbell on your shoulders and squat', 'https://www.youtube.com/watch?v=ultWZbUMPL8');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Deadlift', 'Lift a barbell from the ground', 'https://www.youtube.com/watch?v=op9kVnSso6Q');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Pull-up', 'Pull yourself up on a bar', 'https://www.youtube.com/watch?v=eGo4IYlbE5g');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Dumbbell curl', 'Curl a dumbbell', 'https://www.youtube.com/watch?v=1TJvJd5e8uI');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Tricep pushdown', 'Push down a cable', 'https://www.youtube.com/watch?v=6kALZikXxLc');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Leg press', 'Press a weight with your legs', 'https://www.youtube.com/watch?v=2e9bZQbJfzE');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO exercises(title, description, link)
+      VALUES('Calf raise', 'Raise your heels', 'https://www.youtube.com/watch?v=2e9bZQbJfzE');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('Workout 1', 'First workout');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('Workout 2', 'Second workout');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(1, 1);
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(1, 2);
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(1, 3);
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(2, 4);
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(2, 5);
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(2, 6);
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(2, 7);
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workout_exercises(workout_id, exercise_id)
+      VALUES(2, 8);
+      ''');
+    });
   }
 }

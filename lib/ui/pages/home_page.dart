@@ -1,3 +1,4 @@
+import 'package:extumany/db/sql_helper.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -42,6 +43,12 @@ class HomePage extends StatelessWidget {
               tooltip: 'View analytics',
               onPressed: () => Navigator.pushNamed(context, '/analytics'),
             ),
+            IconButton(onPressed: () => SQLHelper.deleteDb(),
+                icon: const Icon(Icons.delete_forever_rounded,
+                  size: 28, color: Colors.red,)),
+            IconButton(onPressed: () => SQLHelper.seedDb(),
+                icon: const Icon(Icons.cloud_download_rounded,
+                  size: 28, color: Colors.green,)),
           ],
         ),
       ),

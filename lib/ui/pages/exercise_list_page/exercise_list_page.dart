@@ -16,10 +16,12 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
   String _description = '';
   String _link = '';
   List<Exercise> exercises = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     _loadExercises();
   }
 
@@ -27,6 +29,7 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
     List<Exercise> loadedExercises = await Exercise.getAll();
     setState(() {
       exercises = loadedExercises;
+      _isLoading = false;
     });
   }
 
@@ -38,11 +41,11 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Your exercises'),
       ),
-      body: ExerciseList(exercises: exercises, deleteExercise: _deleteExercise),
+      body: _isLoading
+          ? const LinearProgressIndicator()
+          : ExerciseList(exercises: exercises, deleteExercise: _deleteExercise),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddExerciseForm(context);
-        },
+        onPressed: () => _showAddExerciseForm(context),
         tooltip: 'Add new exercise',
         child: const Icon(Icons.add),
       ),
