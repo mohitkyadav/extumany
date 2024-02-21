@@ -1,4 +1,5 @@
 import 'package:extumany/db/models/models.dart';
+import 'package:extumany/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutList extends StatelessWidget {
@@ -93,6 +94,9 @@ class WorkoutBoxItem extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              onTap: () => Navigator.pushNamed(
+                  context, WorkoutDetailsPage.routeName,
+                  arguments: workout.id),
               subtitle: Text(
                 workout.description ?? '',
                 style: const TextStyle(

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 class WorkoutListPage extends StatefulWidget {
   const WorkoutListPage({super.key});
 
+  static const routeName = '/workouts';
+
   @override
   State<WorkoutListPage> createState() => _WorkoutListPageState();
 }

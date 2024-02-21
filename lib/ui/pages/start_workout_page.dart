@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class StartWorkoutPage extends StatelessWidget {
   const StartWorkoutPage({super.key});
 
+  static const routeName = '/play';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
