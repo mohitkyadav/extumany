@@ -1,53 +1,30 @@
 import 'package:extumany/db/models/models.dart';
-import 'package:extumany/ui/pages/workout_list_page/workout_list.dart';
 import 'package:flutter/material.dart';
 
-class WorkoutListPage extends StatefulWidget {
-  const WorkoutListPage({super.key});
+class WorkoutEditor extends StatefulWidget {
+  const WorkoutEditor({super.key, required this.workout, this.successCallback});
 
-  static const routeName = '/workouts';
+  final Workout workout;
+  final void Function()? successCallback;
 
   @override
-  State<WorkoutListPage> createState() => _WorkoutListPageState();
+  State<WorkoutEditor> createState() => _WorkoutEditorState();
 }
 
-class _WorkoutListPageState extends State<WorkoutListPage> {
+class _WorkoutEditorState extends State<WorkoutEditor> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   String _description = '';
-  List<Workout> workouts = [];
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isLoading = true;
-    _loadWorkouts();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Your workouts'),
-      ),
-      body: _isLoading
-          ? const LinearProgressIndicator()
-          : WorkoutList(
-              workouts: workouts,
-              deleteWorkout: _deleteWorkout,
-              loadWorkouts: _loadWorkouts,
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showCreateWorkoutForm(context),
-        tooltip: 'Create new workout',
-        child: const Icon(Icons.add),
-      ),
+    return IconButton(
+      icon: const Icon(Icons.edit_rounded),
+      onPressed: () => _showEditWorkoutForm(context, widget.workout),
     );
   }
 
-  void _showCreateWorkoutForm(BuildContext context) {
+  void _showEditWorkoutForm(BuildContext context, Workout workout) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -63,7 +40,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'Add New Exercise',
+                    'Edit Workout',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -71,6 +48,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    initialValue: workout.title,
                     decoration: const InputDecoration(
                       labelText: 'Title',
                     ),
@@ -84,6 +62,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    initialValue: workout.description,
                     decoration: const InputDecoration(
                       labelText: 'Description',
                     ),
@@ -91,8 +70,8 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                   ),
                   const SizedBox(height: 20),
                   TextButton(
-                    onPressed: () => _saveExercise(context),
-                    child: const Text('Save'),
+                    onPressed: () => _updateWorkout(context, workout),
+                    child: const Text('Update'),
                   ),
                 ],
               ),
@@ -103,36 +82,29 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     );
   }
 
-  void _saveExercise(BuildContext context) {
+  void _updateWorkout(BuildContext context, Workout workout) {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Do something with _name
     }
-    final workout = Workout(title: _title, description: _description);
+    final updatedWorkout = Workout(
+      id: workout.id,
+      title: _title,
+      description: _description,
+    );
 
-    workout.persistInDb().then((newWorkoutId) {
-      _loadWorkouts();
+    updatedWorkout.persistInDb().then((newWorkoutId) {
+      if (widget.successCallback != null) {
+        widget.successCallback!();
+      }
+
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Exercise saved successfully!'),
+          content: Text('Workout updated successfully!'),
           duration: Duration(seconds: 2),
         ),
       );
       _formKey.currentState!.reset();
     });
-  }
-
-  Future<void> _loadWorkouts() async {
-    List<Workout> loadedWorkouts = await Workout.getAll();
-    setState(() {
-      workouts = loadedWorkouts;
-      _isLoading = false;
-    });
-  }
-
-  Future<void> _deleteWorkout(int id) async {
-    await Workout.delete(id);
-    _loadWorkouts();
   }
 }

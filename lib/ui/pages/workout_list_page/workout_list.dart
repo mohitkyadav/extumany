@@ -1,4 +1,5 @@
 import 'package:extumany/db/models/models.dart';
+import 'package:extumany/ui/widgets/widgets.dart';
 import 'package:extumany/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
@@ -7,11 +8,11 @@ class WorkoutList extends StatelessWidget {
       {super.key,
       required this.workouts,
       required this.deleteWorkout,
-      required this.showEditWorkoutForm});
+      required this.loadWorkouts});
 
   final List<Workout> workouts;
   final void Function(int) deleteWorkout;
-  final void Function(BuildContext, Workout) showEditWorkoutForm;
+  final void Function() loadWorkouts;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class WorkoutList extends StatelessWidget {
         itemBuilder: (context, index) => WorkoutBoxItem(
               workout: workouts[index],
               deleteWorkout: deleteWorkout,
-              showEditWorkoutForm: showEditWorkoutForm,
+              loadWorkouts: loadWorkouts,
             ));
   }
 }
@@ -68,11 +69,11 @@ class WorkoutBoxItem extends StatelessWidget {
       {super.key,
       required this.workout,
       required this.deleteWorkout,
-      required this.showEditWorkoutForm});
+      required this.loadWorkouts});
 
   final Workout workout;
   final void Function(int) deleteWorkout;
-  final void Function(BuildContext, Workout) showEditWorkoutForm;
+  final void Function() loadWorkouts;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +101,7 @@ class WorkoutBoxItem extends StatelessWidget {
                 Text(
                   workout.title,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -113,13 +114,9 @@ class WorkoutBoxItem extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.edit_rounded,
-                        size: 16,
-                      ),
-                      onPressed: () => showEditWorkoutForm(context, workout),
-                      tooltip: 'Edit ${workout.title}',
+                    WorkoutEditor(
+                      workout: workout,
+                      successCallback: () => loadWorkouts(),
                     ),
                     IconButton(
                       icon: const Icon(

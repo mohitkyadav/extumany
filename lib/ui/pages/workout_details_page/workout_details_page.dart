@@ -1,3 +1,4 @@
+import 'package:extumany/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:extumany/db/models/models.dart';
 
@@ -11,8 +12,8 @@ class WorkoutDetailsPage extends StatefulWidget {
 }
 
 class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
-  bool _isLoading = false;
-  Workout? _workout;
+  bool _isWorkoutFetched = false;
+  late Workout _workout;
 
   @override
   void initState() {
@@ -28,15 +29,24 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context)!.settings.arguments as int;
 
-    if (_workout == null) {
+    if (!_isWorkoutFetched) {
       _loadWorkout(id);
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_workout?.title ?? 'Workout details'),
+        title: Text(
+            _isWorkoutFetched ? _workout.title : 'Fetching workout details'),
+        actions: [
+          _isWorkoutFetched
+              ? WorkoutEditor(
+                  workout: _workout,
+                  successCallback: () => _loadWorkout(id),
+                )
+              : const SizedBox.shrink(),
+        ],
       ),
-      body: _isLoading
+      body: !_isWorkoutFetched
           ? const LinearProgressIndicator()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -46,6 +56,12 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
               ],
             ),
     );
+  }
+
+  void _deleteWorkout(int? id) {
+    if (id == null) return;
+
+    Workout.delete(id).then((value) => Navigator.of(context).pop());
   }
 
   // a small rounded card that takes the full width of the screen with workout.description and number of exercises
@@ -94,7 +110,7 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
 
     print(workout);
     setState(() {
-      _isLoading = false;
+      _isWorkoutFetched = true;
       _workout = workout;
     });
   }
