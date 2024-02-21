@@ -150,11 +150,15 @@ class SQLHelper {
       ''');
       await txn.rawInsert('''
       INSERT INTO workouts(title, description)
-      VALUES('Workout 1', 'First workout');
+      VALUES('allstar: bk x bc', 'On wednesdays, 2nd day from climbing with proper rest for back muscles');
       ''');
       await txn.rawInsert('''
       INSERT INTO workouts(title, description)
-      VALUES('Workout 2', 'Second workout');
+      VALUES('cfs: sh x tc x lg', 'On thursdays after theory lessons, do for strength gain');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('cfs: sh x tc x lg x a very long long long long long long long long long name', 'On thursdays after theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons, do for strength gain');
       ''');
       await txn.rawInsert('''
       INSERT INTO workout_exercises(workout_id, exercise_id)
