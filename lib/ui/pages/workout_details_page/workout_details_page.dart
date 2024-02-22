@@ -15,7 +15,7 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
   bool _isWorkoutFetched = false;
   late Workout _workout;
   List<Exercise> _unselectedExercises = [];
-  int? _selectedOption;
+  Exercise? _selectedOption;
 
   @override
   void initState() {
@@ -93,65 +93,64 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
   }
 
   void _showAddExerciseDialog(int workoutId) {
-    List<String> exerciseItems = _unselectedExercises
-        .map((exercise) => exercise.title)
-        .toList(growable: false);
-    List<int?> exerciseItemsIds = _unselectedExercises
-        .map((exercise) => exercise.id)
-        .toList(growable: false);
-
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Container(
-            margin: const EdgeInsets.only(top: 20, bottom: 10),
-            child: DropdownButton<int>(
-              hint: const Text('Select an exercise'),
-              padding: const EdgeInsets.all(8),
-              borderRadius: BorderRadius.circular(10),
-              value: _selectedOption,
-              // value: _selectedOption != null ? _workout.exercises[int.parse(selectedOption!)].title : null,
-              onChanged: (int? newValue) {
-                print(newValue);
-                setState(() {
-                  _selectedOption = newValue!;
-                });
-                print(_workout.exercises[_selectedOption!].title);
-              },
-              elevation: 0,
-              isExpanded: true,
-              items: exerciseItems
-                  .asMap()
-                  .entries
-                  .map<DropdownMenuItem<int>>((entry) {
-                final index = entry.key;
-                final title = entry.value;
-                return DropdownMenuItem<int>(
-                  value: index,
-                  child: Text(title),
-                );
-              }).toList(),
+      builder: (context) => StatefulBuilder(
+        builder: (BuildContext context, setStateSB) {
+          return AlertDialog(
+            content: Container(
+              margin: const EdgeInsets.only(top: 20, bottom: 10),
+              child: DropdownButton<Exercise>(
+                hint: const Text('Select an exercise'),
+                padding: const EdgeInsets.all(8),
+                borderRadius: BorderRadius.circular(10),
+                value: _selectedOption,
+                onChanged: (Exercise? newValue) {
+                  setStateSB(() {
+                    _selectedOption = newValue!;
+                  });
+                },
+                elevation: 0,
+                isExpanded: true,
+                items: _unselectedExercises
+                    .map<DropdownMenuItem<Exercise>>((exercise) {
+                  return DropdownMenuItem<Exercise>(
+                    value: exercise,
+                    child: Text(exercise.title),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final exerciseId = exerciseItemsIds[_selectedOption!];
-                _addExerciseToWorkout(workoutId, exerciseId!).then((value) {
-                  _loadWorkout(workoutId);
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  setStateSB(() {
+                    _selectedOption = null;
+                  });
                   Navigator.of(context).pop();
-                });
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
+                },
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final exerciseId = _selectedOption!.id;
+                  _addExerciseToWorkout(workoutId, exerciseId!).then((value) {
+                    _loadWorkout(workoutId);
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Exercise added to workout'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  });
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -178,7 +177,18 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
   void _deleteWorkout(int? id) {
     if (id == null) return;
 
-    Workout.delete(id).then((value) => Navigator.of(context).pop());
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConfirmationDialog(
+          title: 'Delete workout',
+          content: const Text('This action cannot be undone.'),
+          confirmText: 'Yes, delete',
+          onConfirm: () =>
+              Workout.delete(id).then((value) => Navigator.of(context).pop()),
+        );
+      },
+    );
   }
 
   Widget _buildWorkoutDetails() {
@@ -205,6 +215,7 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
 
   Widget _buildExercises() {
     final exercises = _workout.exercises;
+    final workoutId = _workout.id!;
 
     return Expanded(
       // flex: FlexFit.tight.index,
@@ -214,15 +225,31 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
         itemBuilder: (context, index) {
           final exercise = exercises[index];
           return ListTile(
-            leading: Text(
-              '${index + 1}.',
-              style: TextStyle(fontSize: 18),
-            ),
-            title: Text(exercise.title,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-            subtitle: Text(exercise.description ?? ''),
-          );
+              leading: Text(
+                '${index + 1}.',
+                style: const TextStyle(fontSize: 18),
+              ),
+              title: Text(exercise.title,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500)),
+              subtitle: Text(exercise.description ?? ''),
+              trailing: IconButton(
+                icon: const Icon(
+                  Icons.delete_rounded,
+                  size: 16,
+                ),
+                onPressed: () {
+                  WorkoutExercise.delete(exercise.id!).then((value) {
+                    _loadWorkout(workoutId);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Exercise removed from workout'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  });
+                },
+              ));
         },
       ),
     );
