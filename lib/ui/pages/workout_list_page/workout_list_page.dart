@@ -47,7 +47,9 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
           ),
           floating: true,
           snap: true,
-          expandedHeight: 80,
+          expandedHeight: 100,
+          collapsedHeight: 80,
+          pinned: true,
           actions: [
             IconButton(
               onPressed: () => _loadWorkouts(),
@@ -67,6 +69,16 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                 ),
               ),
             ),
+            collapseMode: CollapseMode.pin,
+            title: Text(
+              '${workouts.length}',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            titlePadding: const EdgeInsets.all(14),
           ),
         ),
         _isLoading
