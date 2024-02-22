@@ -70,7 +70,9 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
           ),
         ),
         _isLoading
-            ? const SliverToBoxAdapter(child: LinearProgressIndicator())
+            ? const SliverToBoxAdapter(
+                child: LinearProgressIndicator(),
+              )
             : WorkoutList(
                 workouts: workouts,
                 deleteWorkout: _deleteWorkout,
@@ -161,7 +163,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
       _isLoading = true;
     });
     List<Workout> loadedWorkouts = await Workout.getAll();
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(milliseconds: 800));
     setState(() {
       workouts = loadedWorkouts;
       _isLoading = false;
