@@ -36,7 +36,9 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            _isWorkoutFetched ? _workout.title : 'Fetching workout details'),
+          _isWorkoutFetched ? _workout.title : 'Fetching workout details',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           _isWorkoutFetched
               ? WorkoutEditor(
@@ -52,9 +54,28 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildWorkoutDetails(),
+                const Divider(),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  child: Text(
+                    '${_workout.exercises.length} Exercises in this workout',
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ),
                 _buildExercises(),
+                const Divider(),
+                _buildDeleteButton(),
               ],
             ),
+    );
+  }
+
+  Widget _buildDeleteButton() {
+    return ElevatedButton(
+      onPressed: () => _deleteWorkout(_workout.id),
+      child: const Text('Delete Workout'),
     );
   }
 
@@ -66,22 +87,21 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
 
   // a small rounded card that takes the full width of the screen with workout.description and number of exercises
   Widget _buildWorkoutDetails() {
-    return Card(
-      margin: const EdgeInsets.all(8),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              _workout?.description ?? '',
-              style: const TextStyle(fontSize: 14),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Exercises: ${_workout?.exercises.length ?? 0}',
-              style: const TextStyle(fontSize: 16),
-            ),
+            Text(_workout.description ?? 'No description provided',
+                style: const TextStyle(
+                  fontSize: 14,
+                )),
           ],
         ),
       ),
@@ -89,15 +109,18 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
   }
 
   Widget _buildExercises() {
-    final exercises = _workout?.exercises ?? [];
+    final exercises = _workout.exercises;
 
     return Expanded(
+      flex: 1,
       child: ListView.builder(
         itemCount: exercises.length,
         itemBuilder: (context, index) {
           final exercise = exercises[index];
           return ListTile(
-            title: Text(exercise.title),
+            title: Text('${index + 1}. ${exercise.title}',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
             subtitle: Text(exercise.description ?? ''),
           );
         },
@@ -108,7 +131,6 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
   Future<void> _loadWorkout(int id) async {
     final workout = await Workout.getOneWorkoutWithExercises(id);
 
-    print(workout);
     setState(() {
       _isWorkoutFetched = true;
       _workout = workout;

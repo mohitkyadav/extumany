@@ -50,6 +50,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
           expandedHeight: 100,
           collapsedHeight: 80,
           pinned: true,
+          shadowColor: Colors.black.withOpacity(0.3),
           actions: [
             IconButton(
               onPressed: () => _loadWorkouts(),
@@ -175,7 +176,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
       _isLoading = true;
     });
     List<Workout> loadedWorkouts = await Workout.getAll();
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(milliseconds: 300));
     setState(() {
       workouts = loadedWorkouts;
       _isLoading = false;
