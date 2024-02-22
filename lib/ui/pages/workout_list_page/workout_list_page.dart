@@ -28,22 +28,55 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Your workouts'),
-      ),
-      body: _isLoading
-          ? const LinearProgressIndicator()
-          : WorkoutList(
-              workouts: workouts,
-              deleteWorkout: _deleteWorkout,
-              loadWorkouts: _loadWorkouts,
-            ),
+      body: _buildCustomScrollView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateWorkoutForm(context),
         tooltip: 'Create new workout',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildCustomScrollView() {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          title: const Text(
+            'Your workouts',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          floating: true,
+          snap: true,
+          expandedHeight: 80,
+          actions: [
+            IconButton(
+              onPressed: () => _loadWorkouts(),
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
+          flexibleSpace: FlexibleSpaceBar(
+            background: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromRGBO(255, 204, 153, 0.4),
+                    Color.fromRGBO(255, 102, 102, 0.5),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        _isLoading
+            ? const SliverToBoxAdapter(child: LinearProgressIndicator())
+            : WorkoutList(
+                workouts: workouts,
+                deleteWorkout: _deleteWorkout,
+                loadWorkouts: _loadWorkouts,
+              ),
+      ],
     );
   }
 
@@ -124,7 +157,11 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   }
 
   Future<void> _loadWorkouts() async {
+    setState(() {
+      _isLoading = true;
+    });
     List<Workout> loadedWorkouts = await Workout.getAll();
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       workouts = loadedWorkouts;
       _isLoading = false;

@@ -20,13 +20,20 @@ class WorkoutList extends StatelessWidget {
       return const EmptyState();
     }
 
-    return ListView.builder(
-        itemCount: workouts.length,
-        itemBuilder: (context, index) => WorkoutBoxItem(
-              workout: workouts[index],
-              deleteWorkout: deleteWorkout,
-              loadWorkouts: loadWorkouts,
-            ));
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: WorkoutBoxItem(
+                workout: workouts[index],
+                deleteWorkout: deleteWorkout,
+                loadWorkouts: loadWorkouts,
+              ));
+        },
+        childCount: workouts.length,
+      ),
+    );
   }
 }
 

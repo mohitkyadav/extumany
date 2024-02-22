@@ -161,6 +161,14 @@ class SQLHelper {
       VALUES('cfs: sh x tc x lg x a very long long long long long long long long long name', 'On thursdays after theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons, do for strength gain');
       ''');
       await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('cfl: bk x bc x a very long long long long long long long long long name', 'On thursdays after theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons, do for strength gain');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('sfa: sh x lg x a very long long long long long long long long long name', 'On thursdays after theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons, do for strength gain');
+      ''');
+      await txn.rawInsert('''
       INSERT INTO workout_exercises(workout_id, exercise_id)
       VALUES(1, 1);
       ''');
