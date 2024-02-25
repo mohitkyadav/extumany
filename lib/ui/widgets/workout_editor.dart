@@ -19,7 +19,10 @@ class _WorkoutEditorState extends State<WorkoutEditor> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.edit_rounded),
+      icon: const Icon(
+        Icons.edit_rounded,
+        size: 18,
+      ),
       onPressed: () => _showEditWorkoutForm(context, widget.workout),
     );
   }

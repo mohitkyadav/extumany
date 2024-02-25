@@ -120,18 +120,35 @@ class WorkoutBoxItem extends StatelessWidget {
                   ),
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    WorkoutEditor(
-                      workout: workout,
-                      successCallback: () => loadWorkouts(),
+                    Row(
+                      children: [
+                        WorkoutEditor(
+                          workout: workout,
+                          successCallback: () => loadWorkouts(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete_forever_rounded,
+                            size: 18,
+                          ),
+                          onPressed: () => deleteWorkout(workout.id!),
+                          tooltip: 'Delete ${workout.title}',
+                        ),
+                      ],
                     ),
                     IconButton(
                       icon: const Icon(
-                        Icons.delete_forever_rounded,
-                        size: 16,
+                        Icons.play_circle_filled_rounded,
+                        size: 18,
                       ),
-                      onPressed: () => deleteWorkout(workout.id!),
-                      tooltip: 'Delete ${workout.title}',
+                      tooltip: 'Start workout',
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        StartWorkoutPage.routeName,
+                        arguments: workout.id,
+                      ),
                     ),
                   ],
                 ),

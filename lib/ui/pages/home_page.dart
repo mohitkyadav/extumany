@@ -26,15 +26,6 @@ class HomePage extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(
-                Icons.play_circle_filled_rounded,
-                size: 28,
-              ),
-              tooltip: 'Start workout',
-              onPressed: () =>
-                  Navigator.pushNamed(context, StartWorkoutPage.routeName),
-            ),
-            IconButton(
-              icon: const Icon(
                 Icons.list_alt_rounded,
                 size: 28,
               ),

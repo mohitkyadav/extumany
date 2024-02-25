@@ -18,16 +18,6 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
   Exercise? _selectedOption;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final workoutId = ModalRoute.of(context)!.settings.arguments as int;
 
@@ -78,8 +68,7 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
         children: [
           Text(
             '${_workout.exercises.length} Exercises in this workout',
-            style: const TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
@@ -90,10 +79,12 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
               Icon(Icons.info_outline_rounded, size: 24),
               SizedBox(width: 16),
               Flexible(
-                child: Text('The order is not important here, when you start the workout, '
-                    'you can do the exercises and log your sets in any order you like.',
+                child: Text(
+                  'The order is not important here, when you start the workout, '
+                  'you can do the exercises and log your sets in any order you like.',
                   style: TextStyle(
-                    fontSize: 12,),
+                    fontSize: 12,
+                  ),
                   textAlign: TextAlign.start,
                 ),
               ),
