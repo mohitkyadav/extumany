@@ -5,6 +5,8 @@ import 'package:extumany/db/models/exercise.dart';
 class ExerciseListPage extends StatefulWidget {
   const ExerciseListPage({super.key});
 
+  static const routeName = '/exercises';
+
   @override
   State<ExerciseListPage> createState() => _ExerciseListPageState();
 }

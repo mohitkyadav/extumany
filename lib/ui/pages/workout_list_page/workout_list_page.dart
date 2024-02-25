@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 class WorkoutListPage extends StatefulWidget {
   const WorkoutListPage({super.key});
 
+  static const routeName = '/workouts';
+
   @override
   State<WorkoutListPage> createState() => _WorkoutListPageState();
 }
@@ -26,21 +28,70 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Your workouts'),
-      ),
-      body: _isLoading
-          ? const LinearProgressIndicator()
-          : WorkoutList(
-              workouts: workouts,
-              deleteWorkout: _deleteWorkout,
-              showEditWorkoutForm: _showEditWorkoutForm),
+      body: _buildCustomScrollView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateWorkoutForm(context),
         tooltip: 'Create new workout',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildCustomScrollView() {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          title: const Text(
+            'Your workouts',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          floating: true,
+          snap: true,
+          expandedHeight: 100,
+          collapsedHeight: 80,
+          pinned: true,
+          shadowColor: Colors.black.withOpacity(0.3),
+          actions: [
+            IconButton(
+              onPressed: () => _loadWorkouts(),
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
+          flexibleSpace: FlexibleSpaceBar(
+            background: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromRGBO(255, 204, 153, 0.4),
+                    Color.fromRGBO(255, 102, 102, 0.5),
+                  ],
+                ),
+              ),
+            ),
+            collapseMode: CollapseMode.pin,
+            title: Text(
+              '${workouts.length}',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            titlePadding: const EdgeInsets.all(14),
+          ),
+        ),
+        _isLoading
+            ? const SliverToBoxAdapter(
+                child: LinearProgressIndicator(),
+              )
+            : WorkoutList(
+                workouts: workouts,
+                deleteWorkout: _deleteWorkout,
+                loadWorkouts: _loadWorkouts,
+              ),
+      ],
     );
   }
 
@@ -120,90 +171,12 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     });
   }
 
-  void _showEditWorkoutForm(BuildContext context, Workout workout) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Edit Workout',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    initialValue: workout.title,
-                    decoration: const InputDecoration(
-                      labelText: 'Title',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => _title = value!,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    initialValue: workout.description,
-                    decoration: const InputDecoration(
-                      labelText: 'Description',
-                    ),
-                    onSaved: (value) => _description = value!,
-                  ),
-                  const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () => _updateWorkout(context, workout),
-                    child: const Text('Update'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _updateWorkout(BuildContext context, Workout workout) {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      // Do something with _name
-    }
-    final updatedWorkout = Workout(
-      id: workout.id,
-      title: _title,
-      description: _description,
-    );
-
-    updatedWorkout.persistInDb().then((newWorkoutId) {
-      _loadWorkouts();
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Workout updated successfully!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      _formKey.currentState!.reset();
-    });
-  }
-
   Future<void> _loadWorkouts() async {
+    setState(() {
+      _isLoading = true;
+    });
     List<Workout> loadedWorkouts = await Workout.getAll();
+    await Future.delayed(const Duration(milliseconds: 300));
     setState(() {
       workouts = loadedWorkouts;
       _isLoading = false;

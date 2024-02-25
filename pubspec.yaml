@@ -38,6 +38,7 @@ dependencies:
   sqflite: ^2.3.2
   sqflite_common_ffi: ^2.3.2+1
   path_provider: ^2.1.2
+  animate_gradient: ^0.0.2+1
 
 dev_dependencies:
   flutter_test:

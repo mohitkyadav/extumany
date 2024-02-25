@@ -1,4 +1,5 @@
 import 'package:extumany/db/sql_helper.dart';
+import 'package:extumany/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,19 +26,12 @@ class HomePage extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(
-                Icons.play_circle_filled_rounded,
-                size: 28,
-              ),
-              tooltip: 'Start workout',
-              onPressed: () => Navigator.pushNamed(context, '/play'),
-            ),
-            IconButton(
-              icon: const Icon(
                 Icons.list_alt_rounded,
                 size: 28,
               ),
               tooltip: 'Workouts',
-              onPressed: () => Navigator.pushNamed(context, '/workouts'),
+              onPressed: () =>
+                  Navigator.pushNamed(context, WorkoutListPage.routeName),
             ),
             IconButton(
               icon: const Icon(
@@ -45,7 +39,8 @@ class HomePage extends StatelessWidget {
                 size: 28,
               ),
               tooltip: 'View exercises',
-              onPressed: () => Navigator.pushNamed(context, '/exercises'),
+              onPressed: () =>
+                  Navigator.pushNamed(context, ExerciseListPage.routeName),
             ),
             IconButton(
               icon: const Icon(
@@ -53,7 +48,8 @@ class HomePage extends StatelessWidget {
                 size: 28,
               ),
               tooltip: 'View analytics',
-              onPressed: () => Navigator.pushNamed(context, '/analytics'),
+              onPressed: () =>
+                  Navigator.pushNamed(context, AnalyticsPage.routeName),
             ),
             IconButton(
                 onPressed: () => SQLHelper.deleteDb(),

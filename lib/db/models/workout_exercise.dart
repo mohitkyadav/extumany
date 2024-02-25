@@ -1,4 +1,5 @@
 import 'package:extumany/db/sql_helper.dart';
+import 'package:extumany/db/models/exercise.dart';
 
 class WorkoutExercise {
   static const tableName = 'workout_exercises';
@@ -44,6 +45,13 @@ class WorkoutExercise {
         where: 'workout_id = ?', whereArgs: [workoutId]);
 
     return data.map((e) => fromMap(e)).toList();
+  }
+
+  static Future<List<Exercise>> getExercisesForWorkout(int workoutId) async {
+    final workoutExercises = await getAllForWorkout(workoutId);
+    final exerciseIds = workoutExercises.map((e) => e.exerciseId).toList();
+
+    return Exercise.getAllByIds(exerciseIds);
   }
 
   static Future<List<WorkoutExercise>> getAll() async {

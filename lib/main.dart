@@ -26,10 +26,11 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
       initialRoute: '/',
       routes: {
-        '/play': (context) => const StartWorkoutPage(),
-        '/workouts': (context) => const WorkoutListPage(),
-        '/exercises': (context) => const ExerciseListPage(),
-        '/analytics': (context) => const AnalyticsPage(),
+        StartWorkoutPage.routeName: (context) => const StartWorkoutPage(),
+        WorkoutListPage.routeName: (context) => const WorkoutListPage(),
+        WorkoutDetailsPage.routeName: (context) => const WorkoutDetailsPage(),
+        ExerciseListPage.routeName: (context) => const ExerciseListPage(),
+        AnalyticsPage.routeName: (context) => const AnalyticsPage(),
       },
     );
   }

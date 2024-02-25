@@ -25,8 +25,8 @@ class SQLHelper {
       workout_id INTEGER,
       exercise_id INTEGER,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (workout_id) REFERENCES workouts(id),
-      FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+      FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE,
+      FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
     );
     CREATE TABLE workout_exercise_sets(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -36,8 +36,8 @@ class SQLHelper {
       reps INTEGER,
       weight REAL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (workout_id) REFERENCES workouts(id),
-      FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+      FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE,
+      FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
     );
     """);
   }
@@ -150,11 +150,23 @@ class SQLHelper {
       ''');
       await txn.rawInsert('''
       INSERT INTO workouts(title, description)
-      VALUES('Workout 1', 'First workout');
+      VALUES('allstar: bk x bc', 'On wednesdays, 2nd day from climbing with proper rest for back muscles');
       ''');
       await txn.rawInsert('''
       INSERT INTO workouts(title, description)
-      VALUES('Workout 2', 'Second workout');
+      VALUES('cfs: sh x tc x lg', 'On thursdays after theory lessons, do for strength gain');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('cfs: sh x tc x lg x a very long long long long long long long long long name', 'On thursdays after theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons, do for strength gain');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('cfl: bk x bc x a very long long long long long long long long long name', 'On thursdays after theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons, do for strength gain');
+      ''');
+      await txn.rawInsert('''
+      INSERT INTO workouts(title, description)
+      VALUES('sfa: sh x lg x a very long long long long long long long long long name', 'On thursdays after theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons theory lessons, do for strength gain');
       ''');
       await txn.rawInsert('''
       INSERT INTO workout_exercises(workout_id, exercise_id)

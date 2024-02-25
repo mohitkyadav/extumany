@@ -72,4 +72,16 @@ class Exercise {
       return Exercise.fromMap(result[i]);
     });
   }
+
+  static Future<List<Exercise>> getAllByIds(List<int> ids) async {
+    final data =
+        await SQLHelper.queryAll(tableName, where: 'id IN (${ids.join(',')})');
+    return data.map((e) => fromMap(e)).toList();
+  }
+
+  static Future<List<Exercise>> getAllExcept(List<int> ids) async {
+    final data = await SQLHelper.queryAll(tableName,
+        where: 'id NOT IN (${ids.join(',')})');
+    return data.map((e) => fromMap(e)).toList();
+  }
 }

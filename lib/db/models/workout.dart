@@ -1,3 +1,4 @@
+import 'package:extumany/db/models/models.dart';
 import 'package:extumany/db/sql_helper.dart';
 import 'package:extumany/utils/utils.dart';
 
@@ -15,6 +16,8 @@ class Workout {
   DateTime? createdAt;
   String title;
   String? description;
+  List<Exercise> exercises = [];
+  List<WorkoutExercise> workoutExercises = [];
 
   Map<String, dynamic> toMap() {
     return {
@@ -58,6 +61,14 @@ class Workout {
         await SQLHelper.get(tableName, id);
 
     return fromMap(result[0]);
+  }
+
+  static Future<Workout> getOneWorkoutWithExercises(int id) async {
+    final workout = await getOne(id);
+    workout.workoutExercises = await WorkoutExercise.getAllForWorkout(id);
+    workout.exercises = await Exercise.getAllByIds(
+        workout.workoutExercises.map((e) => e.exerciseId).toList());
+    return workout;
   }
 
   static Future<List<Workout>> getAll() async {
