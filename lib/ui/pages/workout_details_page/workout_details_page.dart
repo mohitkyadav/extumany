@@ -1,3 +1,4 @@
+import 'package:extumany/ui/pages/pages.dart';
 import 'package:extumany/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:extumany/db/models/models.dart';
@@ -51,12 +52,43 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
                 _buildExercises(),
               ],
             ),
-      bottomNavigationBar: BottomAppBar(
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        _buildAddExerciseButton(workoutId),
-        _buildDeleteButton(),
-      ])),
+      bottomNavigationBar: _buildBottomAppBar(workoutId),
+    );
+  }
+
+  BottomAppBar _buildBottomAppBar(int workoutId) {
+    return BottomAppBar(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+              onPressed: () => _showAddExerciseDialog(workoutId),
+              icon: const Icon(Icons.add),
+              tooltip: 'Add Exercise',
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              )),
+          IconButton(
+            onPressed: () => _deleteWorkout(_workout.id),
+            icon: const Icon(Icons.delete_forever_rounded),
+            tooltip: 'Delete this workout',
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.play_circle_filled_rounded,
+            ),
+            tooltip: 'Start workout',
+            onPressed: () => Navigator.pushNamed(
+              context,
+              StartWorkoutPage.routeName,
+              arguments: _workout.id,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -92,19 +124,6 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildAddExerciseButton(int workoutId) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: TextButton.icon(
-          onPressed: () => _showAddExerciseDialog(workoutId),
-          icon: const Icon(Icons.add),
-          label: const Text('Exercise'),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.black,
-          )),
     );
   }
 
@@ -174,20 +193,6 @@ class _WorkoutDetailsPage extends State<WorkoutDetailsPage> {
     final newWorkoutExercise =
         WorkoutExercise(workoutId: workoutId, exerciseId: exerciseId);
     await newWorkoutExercise.persistInDb();
-  }
-
-  Widget _buildDeleteButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: TextButton.icon(
-        onPressed: () => _deleteWorkout(_workout.id),
-        icon: const Icon(Icons.delete_forever_rounded),
-        label: const Text('Workout'),
-        style: TextButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.error,
-        ),
-      ),
-    );
   }
 
   void _deleteWorkout(int? id) {
